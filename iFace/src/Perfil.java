@@ -2,14 +2,6 @@ import java.util.ArrayList;
 
 public class Perfil {
 
-    public Perfil(String nome, String login, String senha) {
-        this.nome = nome;
-        this.login = login;
-        this.senha = senha;
-    }
-
-    public Perfil() {}
-
     private String nome;
     private String login;
     private String senha;
@@ -18,6 +10,11 @@ public class Perfil {
     private ArrayList<Mensagem> mensagens = new ArrayList<>();
     private ArrayList<Comunidade> comunidades = new ArrayList<>();
 
+    public Perfil(String nome, String login, String senha) {
+        this.nome = nome;
+        this.login = login;
+        this.senha = senha;
+    }
 
     public String getNome() {
         return nome;
@@ -63,8 +60,8 @@ public class Perfil {
         return mensagens;
     }
 
-    public void setMensagens(String login, String mensagem) {
-        this.mensagens.add(new Mensagem(login, mensagem));
+    public void setMensagens(Perfil usuario, String mensagem) {
+        this.mensagens.add(new Mensagem(usuario, mensagem));
     }
 
     public ArrayList<Comunidade> getComunidades() {

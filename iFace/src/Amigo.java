@@ -1,31 +1,51 @@
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class Amigo {
 
-    static Scanner input = new Scanner(System.in);
 
     public static void enviarPedidoAmizade(Perfil usuario) {
 
         System.out.print("Enviar solicitação de amizade para: ");
-        input.nextLine();
+
+        Scanner input = new Scanner(System.in);
         String nome = input.nextLine();
 
         for (Perfil i : Sistema.getUsuarios()) {
-            if (i.getNome().equals(nome) && i != usuario) {
-                i.setPedido(usuario);
-                System.out.println("\nConvite enviado\n");
+            if (i.getNome().equals(nome)) {
+                if (i == usuario) {
+                    System.out.println("Não é permitido enviar pedido de amizade para você mesmo");
+                }
+                else if (i.getPedido().contains(usuario)) {
+                    System.out.printf("Você já enviou um pedido para %s\n", nome);
+                }
+                else if(usuario.getPedido().contains(i)) {
+                    usuario.setAmigo(i);
+                    i.setAmigo(usuario);
+                    usuario.getPedido().remove(i);
+                    System.out.printf("Agora você e %s são amigos\n\n", nome);
+                }
+                else if (i.getAmigo().contains(usuario)) {
+                    System.out.println("Vocês já são amigos");
+                }
+                else {
+                    i.setPedido(usuario);
+                    System.out.println("Convite enviado\n");
+                }
                 return;
             }
         }
-        System.out.println("\nNão foi encontrado alguém com esse nome\nSolicitação não enviada\n");
+        System.out.println("Não foi encontrado alguém com esse nome\nSolicitação não enviada\n");
     }
 
     public static void pedidoAmizade(Perfil usuario) {
 
+        Scanner input = new Scanner(System.in);
+
         for (Perfil j : usuario.getPedido()) {
             for (Perfil k : Sistema.getUsuarios()) {
                 if (k == j) {
-                    System.out.printf("Solicitação de amizade de: %s\n(1) Aceitar \t (2) Rejeitar \t (0) Ignorar", k.getNome());
+                    System.out.printf("\nSolicitação de amizade de: %s\n(1) Aceitar \t (2) Rejeitar \t (0) Ignorar\n", k.getNome());
                     int opc = input.nextInt();
 
                     if (opc == 1) {
@@ -49,6 +69,8 @@ public class Amigo {
     }
 
     public static void qtdPedido(Perfil usuario) {
+
+        Scanner input = new Scanner(System.in);
 
         System.out.printf("Você tem %d solicitações de amizade\n", usuario.getPedido().size());
 

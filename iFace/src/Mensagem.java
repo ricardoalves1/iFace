@@ -2,43 +2,39 @@ import java.util.Scanner;
 
 public class Mensagem {
 
-    public Mensagem(String login, String mensagem) {
-        this.login = login;
+    private Perfil usuario;
+    private String mensagem;
+
+    public Mensagem(Perfil usuario, String mensagem) {
+        this.usuario = usuario;
         this.mensagem = mensagem;
     }
 
-    private String login;
-    private String mensagem;
-    static Scanner input = new Scanner(System.in);
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
+    public Perfil getUsuario() {
+        return usuario;
     }
 
     public String getMensagem() {
         return mensagem;
     }
 
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
+    public static void enviarMensagemUsuario(Perfil usuario) {
 
-    public static void enviarMensagemUsuario(String login) {
+        Scanner input = new Scanner(System.in);
 
-        input.nextLine();
         System.out.print("Enviar mensagem para pessoa: ");
         String nome = input.nextLine();
-        System.out.print("Mensagem:");
+        System.out.print("Mensagem: ");
         String mensagem = input.nextLine();
 
         for (Perfil i: Sistema.getUsuarios()) {
-            if (i.getNome().equals(nome) && !i.getLogin().equals(login)) {
-                i.setMensagens(login, mensagem);
-                System.out.println("Mensagem enviada\n");
+            if (i.getNome().equals(nome)) {
+                if (i == usuario) {
+                    System.out.println("Não é permitido enviar mensagem para você mesmo");
+                    return;
+                }
+                i.setMensagens(usuario, mensagem);
+                System.out.println("\nMensagem enviada\n");
                 return;
             }
         }
@@ -46,22 +42,19 @@ public class Mensagem {
 
     }
 
-    public static void enviarMensagemComunidade(String login) {
+    public static void enviarMensagemComunidade(Perfil usuario) {
 
-        input.nextLine();
+        Scanner input = new Scanner(System.in);
+
         System.out.print("Enviar mensagem para a comunidade: ");
         String comunidade = input.nextLine();
-        System.out.println("Mensagem:");
+        System.out.print("Mensagem: ");
         String mensagem = input.nextLine();
 
         for (Comunidade i: Sistema.getComunidades()) {
             if (i.getComunidade().equals(comunidade)) {
-                for (Perfil j: Sistema.getUsuarios()) {
-                    if (j.getLogin().equals(login)) {
-                        i.setMensagens(j.getNome(), mensagem);
-                    }
-                }
-                System.out.println("Mensagem enviada\n");
+                i.setMensagens(usuario, mensagem);
+                System.out.println("\nMensagem enviada\n");
                 return;
             }
         }
@@ -69,17 +62,12 @@ public class Mensagem {
 
     }
 
-
     public static void lerMensagemUsuario(Perfil usuario) {
 
         // Mensagens de usuários
         for (Mensagem j : usuario.getMensagens()) {
-            for (Perfil k : Sistema.getUsuarios()) {
-                if (k.getLogin().equals(j.getLogin())) {
-                    System.out.printf("--------------\nMensagem de %s:\t%s\n--------------\n", k.getNome(), j.getMensagem());
-                    break;
-                }
-            }
+                System.out.printf("--------------\nMensagem de %s:\t%s\n--------------\n", j.getUsuario().getNome(), j.getMensagem());
+                break;
         }
 
     }
@@ -87,7 +75,7 @@ public class Mensagem {
     public static void qtdMensagemUsuario(Perfil usuario) {
 
         Scanner input = new Scanner(System.in);
-        System.out.printf("\nVocê tem %d mensagens:\n", usuario.getMensagens().size());
+        System.out.printf("\nVocê tem %d mensagens\n", usuario.getMensagens().size());
 
         if (usuario.getMensagens().size() > 0) {
             System.out.println("(1) Ler \t(0) Ignorar\n\n");
@@ -102,38 +90,37 @@ public class Mensagem {
     public static void lerMensagemComunidade(Comunidade comunidade) {
 
         // Mensagens de Comunidades
-        System.out.printf("Mensagens da comunidade %s:\n", comunidade.getComunidade());
+        System.out.printf("\nMensagens da comunidade %s:\n", comunidade.getComunidade());
         for (Mensagem k : comunidade.getMensagens()) {
-            // k.getLogin() é o nome do usuário
-            System.out.printf("Enviada por: %s\n\t%s\n------------------------------\n", k.getLogin(), k.getMensagem());
+            System.out.printf("Enviada por: %s\n\t%s\n------------------------------\n", k.getUsuario().getNome(), k.getMensagem());
         }
 
     }
 
-    public static void qtdMensagemComunidade(String login) {
+    public static void qtdMensagemComunidade(Perfil usuario) {
 
         Scanner input = new Scanner(System.in);
+        System.out.println("Mensagens das Comunidades");
+        if (usuario.getComunidades().size() == 0) {
+            System.out.println("Você não está em uma comunidade");
+            return;
+        }
 
-        for (Perfil i : Sistema.getUsuarios()) {
-            if (i.getLogin().equals(login)) {
-                // Comunidades
-                for (Comunidade j: Sistema.getComunidades()) {
-                    if ((j.getAdmin().getLogin().equals(i.getLogin()) || Comunidade.getMembro().contains(i))) {
-                        System.out.printf("A comunidade %s tem %d mensagens no total\n", j.getComunidade(), j.getMensagens().size());
+        // Comunidades
+        for (Comunidade j: Sistema.getComunidades()) {
+            if (j.getAdmin() == usuario || j.getMembro().contains(usuario)) {
+                System.out.printf("A comunidade %s tem %d mensagens no total\n", j.getComunidade(), j.getMensagens().size());
 
-                        if (j.getMensagens().size() > 0) {
-                            System.out.println("(1) Ler Mensagens \t (2) Ignorar");
-
-                            if (input.nextInt() == 1) {
-                                lerMensagemComunidade(j);
-                            }
-                        }
+                if (j.getMensagens().size() > 0) {
+                    System.out.println("(1) Ler Mensagens \t (2) Ignorar");
+                    if (input.nextInt() == 1) {
+                        lerMensagemComunidade(j);
                     }
                 }
 
             }
         }
-    }
 
+    }
 
 }

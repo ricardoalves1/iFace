@@ -2,18 +2,14 @@ import java.util.Scanner;
 
 public class Usuario {
 
-    static Scanner input = new Scanner(System.in);
+    public static void novoUsuario(String nome, String login, String senha) {
 
-    public static int novoUsuario(String nome, String login, String senha) {
+        Scanner input = new Scanner(System.in);
 
         for (Perfil i : Sistema.getUsuarios()) {
             if (i.getLogin().equals(login) || i.getNome().equals(nome)) {
-                System.out.println("\nUsuário já cadastrado\nDigite (1) para tentar novamente ou (0) para sair");
-                int opc = input.nextInt();
-                if (opc == 0) {
-                    return 1;
-                }
-                return 0;
+                System.out.println("\nUsuário já cadastrado\n");
+                return;
             }
         }
 
@@ -21,33 +17,25 @@ public class Usuario {
         Sistema.setUsuarios(novo); // Adicionando o usuario a lista
         entrar(login, senha); // Entrando com o novo usuario
 
-        return 1;
-
     }
 
-    public static int entrar(String login, String senha) {
+    public static void entrar(String login, String senha) {
 
         for (Perfil i : Sistema.getUsuarios()) {
             if (i.getLogin().equals(login) && i.getSenha().equals(senha)) {
                 System.out.println("Login efetuado\n");
                 Menu.inicio(i);
-                return 1;
+                return;
             }
         }
 
-        System.out.println("\nLogin ou senha incorretos\nDigite (1) para tentar novamente ou (0) para sair");
-        int opc = input.nextInt();
-        if (opc == 0) {
-            return 1;
-        }
-
-        return 0;
-
+        System.out.println("\nLogin ou senha incorretos\n");
     }
 
     public static void editarPerfil(Perfil usuario) {
 
         System.out.println("\n(1) Editar login\n(2) Editar nome\n(3) Editar Senha\n(0) Cancelar");
+        Scanner input = new Scanner(System.in);
         int opc = input.nextInt();
 
         if (opc == 1) {
@@ -78,17 +66,11 @@ public class Usuario {
 
     }
 
-    public static void informacoes(String login) {
+    public static void informacoes(Perfil usuario) {
 
         System.out.println("Informações do usuário:\n(1) Perfil\n(2) Amigos\n(3) Comunidades\n(0) Cancelar");
+        Scanner input = new Scanner(System.in);
         int opc = input.nextInt();
-        Perfil usuario = new Perfil();
-
-        for (Perfil i: Sistema.getUsuarios()) {
-            if (i.getLogin().equals(login)) {
-                usuario = i;
-            }
-        }
 
         if (opc == 1) {
             System.out.printf("Nome: %s\nLogin: %s\nSenha: %s\n", usuario.getNome(), usuario.getLogin(), usuario.getSenha());
@@ -99,8 +81,8 @@ public class Usuario {
 
             if (usuario.getAmigo().size() > 0) {
                 System.out.println("Seus amigos");
-                for (String j: usuario.getAmigo()) {
-                    System.out.printf("%s\n", j);
+                for (Perfil j: usuario.getAmigo()) {
+                    System.out.printf("%s\n", j.getNome());
                 }
             }
 
