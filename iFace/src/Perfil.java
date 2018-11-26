@@ -13,8 +13,8 @@ public class Perfil {
     private String nome;
     private String login;
     private String senha;
-    private ArrayList<String> amigo = new ArrayList<>();
-    private ArrayList<String> pedido = new ArrayList<>();
+    private ArrayList<Perfil> amigo = new ArrayList<>();
+    private ArrayList<Perfil> pedido = new ArrayList<>();
     private ArrayList<Mensagem> mensagens = new ArrayList<>();
     private ArrayList<Comunidade> comunidades = new ArrayList<>();
 
@@ -43,20 +43,20 @@ public class Perfil {
         this.senha = senha;
     }
 
-    public ArrayList<String> getAmigo() {
+    public ArrayList<Perfil> getAmigo() {
         return amigo;
     }
 
-    public void setAmigo(String login) {
-        amigo.add(login);
+    public void setAmigo(Perfil usuario) {
+        amigo.add(usuario);
     }
 
-    public ArrayList<String> getPedido() {
+    public ArrayList<Perfil> getPedido() {
         return pedido;
     }
 
-    public void setPedido(String login) {
-        pedido.add(login);
+    public void setPedido(Perfil usuario) {
+        pedido.add(usuario);
     }
 
     public ArrayList<Mensagem> getMensagens() {

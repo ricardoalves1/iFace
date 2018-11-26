@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Usuario {
 
-    public static Scanner input = new Scanner(System.in);
+    static Scanner input = new Scanner(System.in);
 
     public static int novoUsuario(String nome, String login, String senha) {
 
@@ -30,7 +30,7 @@ public class Usuario {
         for (Perfil i : Sistema.getUsuarios()) {
             if (i.getLogin().equals(login) && i.getSenha().equals(senha)) {
                 System.out.println("Login efetuado\n");
-                Menu.inicio(login);
+                Menu.inicio(i);
                 return 1;
             }
         }
@@ -45,48 +45,79 @@ public class Usuario {
 
     }
 
-    public static void editarPerfil(String login) {
+    public static void editarPerfil(Perfil usuario) {
 
-        System.out.println("\n(1) Editar nome\n(2) Editar Senha\n(0) Cancelar");
+        System.out.println("\n(1) Editar login\n(2) Editar nome\n(3) Editar Senha\n(0) Cancelar");
         int opc = input.nextInt();
 
-        if (opc == 1){
+        if (opc == 1) {
+            input.nextLine();
+            System.out.print("Novo login: ");
+            String login = input.nextLine();
+
+            usuario.setLogin(login);
+            System.out.println("Login alterado\n");
+        }
+        else if (opc == 2){
             input.nextLine();
             System.out.print("Novo nome: ");
             String nome = input.nextLine();
 
-            for (Perfil i : Sistema.getUsuarios()) {
-                if (i.getLogin().equals(login)) {
-                    i.setNome(nome);
-                    System.out.println("Nome alterado\n");
-                }
-            }
+            usuario.setNome(nome);
+            System.out.println("Nome alterado\n");
         }
-        else if (opc == 2){
+        else if (opc == 3){
             input.nextLine();
             System.out.println("Nova senha: ");
             String senha = input.nextLine();
 
-            for (Perfil i : Sistema.getUsuarios()) {
-                if (i.getLogin().equals(login)) {
-                    i.setSenha(senha);
-                    System.out.println("Senha alterada\n");
-                }
-            }
+            usuario.setSenha(senha);
+            System.out.println("Senha alterada\n");
+
         }
 
     }
 
-    public static void pedidoAmizade(String login, String nome) {
+    public static void informacoes(String login) {
 
-        for (Perfil i : Sistema.getUsuarios()) {
-            if (i.getNome().equals(nome) && !i.getLogin().equals(login)) {
-                i.setPedido(login);
-                System.out.println("\nConvite enviado\n");
-                return;
+        System.out.println("Informações do usuário:\n(1) Perfil\n(2) Amigos\n(3) Comunidades\n(0) Cancelar");
+        int opc = input.nextInt();
+        Perfil usuario = new Perfil();
+
+        for (Perfil i: Sistema.getUsuarios()) {
+            if (i.getLogin().equals(login)) {
+                usuario = i;
             }
         }
-        System.out.println("\nOcorreu um erro...\nAmigo não adicionado\n");
+
+        if (opc == 1) {
+            System.out.printf("Nome: %s\nLogin: %s\nSenha: %s\n", usuario.getNome(), usuario.getLogin(), usuario.getSenha());
+        }
+        else if (opc == 2) {
+
+            System.out.printf("Você tem %d amigos\n", usuario.getAmigo().size());
+
+            if (usuario.getAmigo().size() > 0) {
+                System.out.println("Seus amigos");
+                for (String j: usuario.getAmigo()) {
+                    System.out.printf("%s\n", j);
+                }
+            }
+
+        }
+        else if (opc == 3) {
+
+            System.out.printf("Você está em %d Comunidades\n", usuario.getComunidades().size());
+
+            if (usuario.getComunidades().size() > 0) {
+                System.out.println("Comunidades:");
+                for (Comunidade j: usuario.getComunidades()) {
+                    System.out.printf("Nome: %s\nDescrição: %s\n--------------------\n", j.getComunidade(), j.getDescricao());
+                }
+            }
+
+        }
+
     }
 
 }

@@ -21,4 +21,8 @@ public class Sistema {
         Sistema.comunidades.add(comunidade);
     }
 
+    public static void removerConta() {
+
+    }
+
 }
