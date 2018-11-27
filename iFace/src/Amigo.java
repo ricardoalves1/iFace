@@ -42,29 +42,30 @@ public class Amigo {
 
         Scanner input = new Scanner(System.in);
 
-        for (Perfil j : usuario.getPedido()) {
-            for (Perfil k : Sistema.getUsuarios()) {
-                if (k == j) {
-                    System.out.printf("\nSolicitação de amizade de: %s\n(1) Aceitar \t (2) Rejeitar \t (0) Ignorar\n", k.getNome());
+        Iterator<Perfil> itPerfil = usuario.getPedido().iterator();
+
+        while (itPerfil.hasNext()) {
+            Perfil i = itPerfil.next();
+
+            for (Perfil j : Sistema.getUsuarios()) {
+                if (j == i) {
+                    System.out.printf("\nSolicitação de amizade de: %s\n(1) Aceitar \t (2) Rejeitar \t (0) Ignorar\n", j.getNome());
                     int opc = input.nextInt();
 
                     if (opc == 1) {
-                        usuario.setAmigo(k);
-                        k.setAmigo(usuario);
-                        usuario.getPedido().set(usuario.getPedido().indexOf(k), null);   // "removendo" o pedido
-                        System.out.printf("Agora você e %s são amigos\n\n", k.getNome());
+                        usuario.setAmigo(j);
+                        j.setAmigo(usuario);
+                        itPerfil.remove();
+                        System.out.printf("Agora você e %s são amigos\n\n", j.getNome());
                     } else if (opc == 2) {
-                        usuario.getPedido().set(usuario.getPedido().indexOf(k), null);   // "removendo" o pedido
-                        System.out.printf("Solicitação de amizade de %s negada\n\n", k.getNome());
+                        itPerfil.remove();
+                        System.out.printf("Solicitação de amizade de %s negada\n\n", j.getNome());
                     }
 
                 }
             }
         }
-        // Remover todos os pedidos que já foram aceitos ou rejeitados
-        while (usuario.getPedido().contains(null)) {
-            usuario.getPedido().remove(null);
-        }
+        
 
     }
 
