@@ -25,7 +25,8 @@ public class Sistema {
 
     public static void removerConta(Perfil usuario) {
 
-        System.out.println("Deseja mesmo remover sua conta?\n(1) Sim \t (2) Não");
+        System.out.println("Deseja mesmo remover sua conta?\nComunidades que você é o administrador serão apagadas\n" +
+                "(1) Sim \t (2) Não");
         Scanner input = new Scanner(System.in);
 
         if (input.nextInt() == 1) {

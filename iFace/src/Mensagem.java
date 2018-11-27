@@ -67,7 +67,6 @@ public class Mensagem {
         // Mensagens de usuários
         for (Mensagem j : usuario.getMensagens()) {
                 System.out.printf("--------------\nMensagem de %s:\t%s\n--------------\n", j.getUsuario().getNome(), j.getMensagem());
-                break;
         }
 
     }
@@ -100,11 +99,11 @@ public class Mensagem {
     public static void qtdMensagemComunidade(Perfil usuario) {
 
         Scanner input = new Scanner(System.in);
-        System.out.println("Mensagens das Comunidades");
         if (usuario.getComunidades().size() == 0) {
             System.out.println("Você não está em uma comunidade");
             return;
         }
+        System.out.println("Mensagens das Comunidades");
 
         // Comunidades
         for (Comunidade j: Sistema.getComunidades()) {
@@ -112,7 +111,7 @@ public class Mensagem {
                 System.out.printf("A comunidade %s tem %d mensagens no total\n", j.getComunidade(), j.getMensagens().size());
 
                 if (j.getMensagens().size() > 0) {
-                    System.out.println("(1) Ler Mensagens \t (2) Ignorar");
+                    System.out.println("(1) Ler Mensagens \t (0) Ignorar");
                     if (input.nextInt() == 1) {
                         lerMensagemComunidade(j);
                     }
